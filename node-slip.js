@@ -28,9 +28,15 @@
 	}
     };
 
-    function slip_parser( receiver ) {
+    function slip_parser( receiver, strict ) {
+	if (typeof strict === "undefined" || strict === null)
+		strict = true
 	this.receiver = receiver;
-	this.state = slip_parser.STATE_OUT;
+	if ( strict )
+		this.state = slip_parser.STATE_OUT;
+	else
+		this.state = slip_parser.STATE_IN;
+	this.strict = strict;
 	this.data = new slip_buffer( 16 );
 	this.error = new slip_buffer( 16 );
     }
@@ -53,7 +59,8 @@
 	    case slip_parser.STATE_IN:
 		switch( input_buffer[i] ) {
 		case slip_parser.CHAR_END:
-		    this.state = slip_parser.STATE_OUT;
+			if ( this.strict )
+				this.state = slip_parser.STATE_OUT;
 		    this.data.contentsAndReset( this.receiver, this.receiver.data );
 		    break;
 		case slip_parser.CHAR_ESC:

@@ -58,7 +58,9 @@ functions: data, framing and escape. Here's a very simple example:
 
 Now instantiate a slip parser like so:
 
-<pre>    var parser = new slip.parser( receiver );</pre>
+<pre>    var parser = new slip.parser( receiver, strict );</pre>
+
+(strict is a bool that will mandate SLIP packets begin and end with the END character if set to true.  It defaults to true.)
 
 And start sending the parser some data:
 
