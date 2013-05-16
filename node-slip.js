@@ -105,36 +105,49 @@
     slip_parser.CHAR_ESC_END = 0xDC;
     slip_parser.CHAR_ESC_ESC = 0xDD;
 
-    slip_generator = function ( input_buffer ) {
-	var new_buffer_size = input_buffer.length + 2;
-	for( var i = 0, il = input_buffer.length; i < il; i++ ) {
-	    var c = input_buffer[ i ];
-	    if( ( c == slip_parser.CHAR_END ) || ( c == slip_parser.CHAR_ESC ) ) {
-		new_buffer_size++;
-	    }
-	}
+  slip_generator = function ( input_buffer, strict ) {
+      var new_buffer_size = input_buffer.length + 1;
 
-	var new_buffer = new Buffer( new_buffer_size );
-	var o = 0;
-	new_buffer[ o++ ] = 0xC0;
-	for( var i = 0, il = input_buffer.length; i < il; i++ ) {
-	    var c = input_buffer[ i ];
-	    switch( c ) {
-	    case slip_parser.CHAR_END:
-		new_buffer[ o++ ] = slip_parser.CHAR_ESC;
-		new_buffer[ o++ ] = slip_parser.CHAR_ESC_END;
-		break;
-	    case slip_parser.CHAR_ESC:
-		new_buffer[ o++ ] = slip_parser.CHAR_ESC;
-		new_buffer[ o++ ] = slip_parser.CHAR_ESC_ESC;
-		break;
-	    default:
-		new_buffer[ o++ ] = c;
-	    }
-	}
-	new_buffer[ o++ ] = 0xC0;
+      if( "undefined" == typeof strict ) {
+        strict = true;
+      }
 
-	return( new_buffer );
+      if( strict ) {
+          new_buffer_size++;
+      }
+
+      for( var i = 0, il = input_buffer.length; i < il; i++ ) {
+          var c = input_buffer[ i ];
+          if( ( c == slip_parser.CHAR_END ) || ( c == slip_parser.CHAR_ESC ) ) {
+              new_buffer_size++;
+          }
+      }
+
+      var new_buffer = new Buffer( new_buffer_size );
+      var o = 0;
+
+      if( strict ) {
+          new_buffer[ o++ ] = 0xC0;
+      }
+
+      for( var i = 0, il = input_buffer.length; i < il; i++ ) {
+          var c = input_buffer[ i ];
+          switch( c ) {
+          case slip_parser.CHAR_END:
+            new_buffer[ o++ ] = slip_parser.CHAR_ESC;
+            new_buffer[ o++ ] = slip_parser.CHAR_ESC_END;
+            break;
+          case slip_parser.CHAR_ESC:
+            new_buffer[ o++ ] = slip_parser.CHAR_ESC;
+            new_buffer[ o++ ] = slip_parser.CHAR_ESC_ESC;
+            break;
+          default:
+            new_buffer[ o++ ] = c;
+          }
+      }
+      new_buffer[ o++ ] = 0xC0;
+
+      return( new_buffer );
     };
 
     if( module && module.exports ) {

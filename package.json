@@ -20,7 +20,7 @@
       "url": "https://github.com/OhMeadhbh/node-slip"
     }
   ],
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "./node-slip.js",
   "keywords": ["slip", "rfc1055"]
 }

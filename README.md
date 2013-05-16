@@ -136,3 +136,13 @@ Will output this:
 
 <pre>    Here's your SLIPified packet: C000FF00FFDBDDFFDBDCFFC0</pre>
 
+The generator call also takes an optional 'strict' parameter. It defaults to true. Explicitly setting the strict
+parameter to false causes the generator to omit the initial END byte. For example, this routine:
+
+<pre>    var slip = require( 'node-slip' );
+    var input = Buffer( '00FF00FFDBFFC0FF', 'hex' );
+    console.log( "Here's your SLIPified packet: " + slip.generator( input, false ).toString( 'hex' ).toUpperCase() );</pre>
+
+Will generate this:
+
+<pre>    Here's your SLIPified packet: 00FF00FFDBDDFFDBDCFFC0</pre>
