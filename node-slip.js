@@ -59,6 +59,8 @@
 	    case slip_parser.STATE_IN:
 		switch( input_buffer[i] ) {
 		case slip_parser.CHAR_END:
+			if ( input_buffer[i-1] == slip_parser.CHAR_END )
+				break;
 			if ( this.strict )
 				this.state = slip_parser.STATE_OUT;
 		    this.data.contentsAndReset( this.receiver, this.receiver.data );
